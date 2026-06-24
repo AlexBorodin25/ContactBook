@@ -136,6 +136,29 @@ def update_contact():
 
         print("Contact updated.")
 
+def delete_contact():
+    view_contacts()
+
+    try:
+        contact_id = int(input("Enter contact ID: "))
+    except ValueError:
+        print("Enter a valid contact ID.")
+        return
+
+    with get_db_conn() as conn:
+        cursor = conn.execute(
+            """DELETE FROM contacts WHERE id = ?""",
+            (contact_id,),
+        )
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            print("Contact not found.")
+        else:
+            print("Contact deleted.")
+
+
+
 
 
 
