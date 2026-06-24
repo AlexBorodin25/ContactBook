@@ -157,17 +157,32 @@ def delete_contact():
         else:
             print("Contact deleted.")
 
+def search_contact():
+    search_value = input("Search by name or phone number: ").strip()
 
+    if not search_value:
+        print("Search cannot be empty.")
+        return
 
+    with get_db_conn() as conn:
+        contacts = conn.execute(
+            """SELECT id, name, email, phone
+               FROM contacts
+               WHERE name LIKE ? OR PHONE LIKE ?
+            ORDER BY name
+            """,
+            (f"%{search_value}%", f"%{search_value}%"),
+        ).fetchall()
 
+    if not contacts:
+        print("No contacts found.")
+        return
 
-
-
-
-
-
-
-
+    print("Search Results:")
+    for contact in contacts:
+        print(
+            f"{contact['id']} - {contact['name']} - {contact['phone']} - {contact['email']}"
+        )
 
 
 def menu():
