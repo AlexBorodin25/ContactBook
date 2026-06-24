@@ -69,7 +69,7 @@ def add_contact():
     print("Contact added!")
 
 def view_contacts():
-    print("All Contacts")
+    print("All Contacts:")
 
     with get_db_conn() as conn:
         contacts = conn.execute(
@@ -187,7 +187,7 @@ def search_contact():
 
 
 def menu():
-    print("Welcome to Contact Manager")
+    print("Welcome to Contact Manager!")
     print("1. View contacts")
     print("2. Add contact")
     print("3. Delete contact")
