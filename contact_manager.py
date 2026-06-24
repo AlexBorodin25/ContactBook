@@ -17,7 +17,7 @@ def create_table():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             email TEXT NOT NULL,
-            phone TEXT NOT NULL,)
+            phone TEXT NOT NULL)
         """
         )
         conn.commit()
@@ -46,8 +46,8 @@ def prompt_phone():
 
         print("Enter a valid phone number.")
 
-def add_contact():\
-    print('Ad Contact')
+def add_contact():
+    print('Add Contact')
 
     name = input("Enter your name: ").strip()
 
@@ -97,6 +97,7 @@ def update_contact():
     with get_db_conn() as conn:
         contact = conn.execute(
             """SELECT id, name, email, phone FROM contacts WHERE id = ?""",
+            (contact_id,),
         ).fetchone()
 
     if contact is None:
@@ -194,4 +195,28 @@ def menu():
     print("5. Search for contact")
     print("6. Exit")
 
+def main():
+    create_table()
 
+    while True:
+        menu()
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            view_contacts()
+        elif choice == "2":
+            add_contact()
+        elif choice == "3":
+            delete_contact()
+        elif choice == "4":
+            update_contact()
+        elif choice == "5":
+            search_contact()
+        elif choice == "6":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice.")
+
+if __name__ == "__main__":
+    main()
