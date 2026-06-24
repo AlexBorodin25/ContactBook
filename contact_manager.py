@@ -46,6 +46,28 @@ def prompt_phone():
 
         print("Enter a valid phone number.")
 
+def add_contact():\
+    print('Ad Contact')
+
+    name = input("Enter your name: ").strip()
+
+    if not name:
+        print("Name cannot be empty.")
+        return
+
+    phone = prompt_phone()
+    email = prompt_email()
+
+    with get_db_conn() as conn:
+        conn.execute(
+            """INSERT INTO contacts (name, email, phone)
+                VALUES (?, ?, ?)""",
+            (name, email, phone),
+        )
+        conn.commit()
+
+    print("Contact added!")
+
 
 
 
