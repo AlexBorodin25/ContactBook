@@ -68,7 +68,73 @@ def add_contact():\
 
     print("Contact added!")
 
+def view_contacts():
+    print("All Contacts")
 
+    with get_db_conn() as conn:
+        contacts = conn.execute(
+            """SELECT id, name, email, phone FROM contacts ORDER BY name"""
+        ).fetchall()
+
+    if not contacts:
+        print("No contacts available.")
+        return
+
+    for contact in contacts:
+        print(
+            f"{contact['id']} - {contact['name']} - {contact['phone']} - {contact['email']}"
+        )
+
+def update_contact():
+    view_contacts()
+
+    try:
+        contact_id = int(input("Enter contact ID: "))
+    except ValueError:
+        print("Enter a valid contact ID.")
+        return
+
+    with get_db_conn() as conn:
+        contact = conn.execute(
+            """SELECT id, name, email, phone FROM contacts WHERE id = ?""",
+        ).fetchone()
+
+    if contact is None:
+        print("Contact not found.")
+        return
+
+    print("Leave the field blank to keep current contact.")
+
+    new_name = input(f"Name [{contact['name']}]: ").strip()
+    new_phone = input(f"Phone [{contact['phone']}]: ").strip()
+    new_email = input(f"Email [{contact['email']}]: ").strip()
+
+    name = new_name if new_name else contact['name']
+
+    if new_phone:
+        if not is_phone_valid(new_phone):
+            print("Invalid format.")
+            return
+        phone = new_phone
+    else:
+        phone = contact['phone']
+
+    if new_email:
+        if not is_email_valid(new_email):
+            print("Invalid format.")
+            return
+        email = new_email
+    else:
+        email = contact['email']
+
+    with get_db_conn() as conn:
+        conn.execute(
+            """UPDATE contacts SET name = ?, email = ?, phone = ? WHERE id = ?""",
+            (name, email, phone, contact_id),
+        )
+        conn.commit()
+
+        print("Contact updated.")
 
 
 
