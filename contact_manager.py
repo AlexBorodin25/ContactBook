@@ -169,7 +169,7 @@ def search_contact():
         contacts = conn.execute(
             """SELECT id, name, email, phone
                FROM contacts
-               WHERE name LIKE ? OR PHONE LIKE ?
+               WHERE name LIKE ? OR phone LIKE ?
             ORDER BY name
             """,
             (f"%{search_value}%", f"%{search_value}%"),
