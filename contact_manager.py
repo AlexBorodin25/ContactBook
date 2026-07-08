@@ -8,6 +8,7 @@ DB_FILE = "contacts.db"
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 PHONE_PATTERN = r"^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$"
 
+
 @contextmanager
 def get_db_conn():
     conn = sqlite3.connect(DB_FILE)
@@ -18,6 +19,7 @@ def get_db_conn():
     finally:
         conn.close()
 
+
 def create_table():
     with get_db_conn() as conn:
         conn.execute("""CREATE TABLE IF NOT EXISTS contacts (
@@ -25,15 +27,17 @@ def create_table():
             name TEXT NOT NULL,
             email TEXT NOT NULL,
             phone TEXT NOT NULL)
-        """
-        )
+        """)
         conn.commit()
+
 
 def is_email_valid(email):
     return re.match(EMAIL_PATTERN, email) is not None
 
+
 def is_phone_valid(phone):
     return re.match(PHONE_PATTERN, phone) is not None
+
 
 def prompt_email():
     while True:
@@ -44,6 +48,7 @@ def prompt_email():
 
         print("Enter a valid email address.")
 
+
 def prompt_phone():
     while True:
         phone = input("Enter your phone number: ").strip()
@@ -53,8 +58,9 @@ def prompt_phone():
 
         print("Enter a valid phone number.")
 
+
 def add_contact():
-    print('Add Contact')
+    print("Add Contact")
 
     name = input("Enter your name: ").strip()
 
@@ -75,6 +81,7 @@ def add_contact():
 
     print("Contact added!")
 
+
 def view_contacts():
     print("All Contacts:")
 
@@ -91,6 +98,7 @@ def view_contacts():
         print(
             f"{contact['id']} - {contact['name']} - {contact['phone']} - {contact['email']}"
         )
+
 
 def update_contact():
     view_contacts()
@@ -117,7 +125,7 @@ def update_contact():
     new_phone = input(f"Phone [{contact['phone']}]: ").strip()
     new_email = input(f"Email [{contact['email']}]: ").strip()
 
-    name = new_name if new_name else contact['name']
+    name = new_name if new_name else contact["name"]
 
     if new_phone:
         if not is_phone_valid(new_phone):
@@ -125,7 +133,7 @@ def update_contact():
             return
         phone = new_phone
     else:
-        phone = contact['phone']
+        phone = contact["phone"]
 
     if new_email:
         if not is_email_valid(new_email):
@@ -133,7 +141,7 @@ def update_contact():
             return
         email = new_email
     else:
-        email = contact['email']
+        email = contact["email"]
 
     with get_db_conn() as conn:
         conn.execute(
@@ -143,6 +151,7 @@ def update_contact():
         conn.commit()
 
         print("Contact updated.")
+
 
 def delete_contact():
     view_contacts()
@@ -164,6 +173,7 @@ def delete_contact():
             print("Contact not found.")
         else:
             print("Contact deleted.")
+
 
 def search_contact():
     search_value = input("Search by name or phone number: ").strip()
@@ -202,6 +212,7 @@ def menu():
     print("5. Search for contact")
     print("6. Exit")
 
+
 def main():
     create_table()
 
@@ -224,6 +235,7 @@ def main():
             break
         else:
             print("Invalid choice.")
+
 
 if __name__ == "__main__":
     main()
